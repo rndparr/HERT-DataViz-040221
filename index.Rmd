@@ -4,27 +4,12 @@ subtitle: 'RMarkdown and Mapping'
 author: 'Randy Parrish'
 date: '04/02/2021'
 output: html_document
-  # html_document:
-    # # number_sections: true
-    # # fig_caption: true
-    # toc: true
-    # toc_depth: 2
-    # toc_float: 
-    #   collapsed: false
-    #   smooth_scroll: false
-    # fig_width: 7
-    # fig_height: 4.5
-    # # code_folding: hide
-    # theme: lumen
-    # highlight: tango
 ---
 
 
 # RMarkdown Setup
 
 ```{r, setup}
-library(kableExtra)
-
 knitr::opts_chunk$set(
   cache = FALSE, 
   error = TRUE, 
@@ -35,12 +20,14 @@ knitr::opts_chunk$set(
 ```
 
 ```{r, functions}
-report_table <- function(data, 
-  w = NULL, h = '150px', ec = 'margin: 10px;', 
-  rownames = FALSE, scroll = TRUE,
-  nrow = -1)
-{
+# make HTML style tables
+library(kableExtra)
 
+# function to make the table from a data frame
+report_table <- function(data, 
+  w = NULL, h = '300px', ec = 'margin: 10px;', 
+  rownames = FALSE, scroll = TRUE)
+{
   # create the HTML table
   tbl <- kable_paper(
   kable_styling(
@@ -77,7 +64,6 @@ library(countrycode)
 
 # plotting spatial data
 library(ggplot2)
-library(rgeos)
 library(rnaturalearth)
 library(sf)
 # 'sf' requires package 'units'; 
@@ -96,7 +82,7 @@ reg_con <- read.csv(
   header = TRUE, 
   sep = '\t')
 
-# show table in HTML
+# show HTML table of data
 report_table(reg_con)
 
 # get 3 letter code for countries
@@ -111,6 +97,9 @@ worldmap <- ne_countries(
   type = 'countries', 
   returnclass = 'sf')
 
+# show HTML table of first 5 lines of data
+report_table(head(as.data.frame(worldmap)))
+
 # merge reg and worldmap on country code
 dat <- merge(
   worldmap, 
@@ -118,9 +107,13 @@ dat <- merge(
   by.x = 'iso_a3', 
   by.y = 'iso', 
   all = TRUE)
+
+# show HTML table of first 5 lines of data
+report_table(head(as.data.frame(dat)))
 ```
 
 ## Palette Set Up
+
 ```{r, palette}
 # list of unique regions
 regions <- sort(unique(reg_con$who_region))
@@ -145,7 +138,7 @@ region_pal <- function(region){
 
 ## World Map
 
-```{r, world-map}
+```{r, world-map, out.width='100%'}
 # plot world map
 world_p <- ggplot(data = dat) + 
   geom_sf(
@@ -156,7 +149,9 @@ world_p <- ggplot(data = dat) +
   scale_fill_manual(
     values = world_pal, 
     na.value = gray) +
-  theme(legend.position = 'none')
+  theme(
+    legend.position = 'none',
+    plot.margin = grid::unit(c(0,0,0,0), 'mm'))
 
 world_p
 ```
@@ -167,7 +162,8 @@ world_p
 ```{r, region-maps}
 # read in data of rectangle coordinates
 # coordinates obtained using: https://boundingbox.klokantech.com/
-reg_loc <- read.table('reg_loc.txt', 
+reg_loc <- read.table(
+  'reg_loc.txt', 
   header = TRUE, 
   sep = '\t',
   fileEncoding = 'UTF-8', 
@@ -207,4 +203,8 @@ region_map('South-East Asia')
 region_map('Western Pacific')
 ```
 
+# More Resources
 
+* ["Drawing beautiful maps programmatically with R, sf and ggplot2"](https://www.r-spatial.org/r/2018/10/25/ggplot2-sf.html) - Mel Moreno & Mathieu Bastille
+
+* ["Zooming in on maps with sf and ggplot2"](https://www.r-bloggers.com/2019/04/zooming-in-on-maps-with-sf-and-ggplot2/) - Markus Konrad

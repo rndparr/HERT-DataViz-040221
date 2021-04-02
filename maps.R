@@ -4,7 +4,7 @@
 # SET WORKING DIRECTORY
 dir <- '/Users/randyparr/Cloud/Documents/Important/School/Emory/HERT/map_email'
 setwd(dir)
-options(stringsAsFactors=FALSE)
+options(stringsAsFactors = FALSE)
 
 
 ########
@@ -15,7 +15,6 @@ library(countrycode)
 
 # plotting spatial data
 library(ggplot2)
-library(rgeos)
 library(rnaturalearth)
 library(sf)
 # 'sf' requires package 'units'; 
