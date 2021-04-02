@@ -1,0 +1,7 @@
+region	lon_min	lat_min	lon_max	lat_max
+Africa	-21.7	-39.6	54.9	41.3
+Americas	-172.3	-58.6	-28.8	84.4
+Eastern Mediterranean	-21.7	-3.8	80.0	41.3
+Europe	-26.0	23.0	180.0	84.3
+South-East Asia	62.6	-14.9	155.4	45.2
+Western Pacific	70.0	-51.8	180	56.1
